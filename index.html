@@ -42,12 +42,13 @@ body.on-forward .notes-fab{display:flex}body.notes-open .notes-fab{display:none}
 @media (pointer:coarse){.seg{height:44px}.seg button,.btn,select,.tabbar button,.shichen-bar button{min-height:44px}.notes-head button{min-height:40px}.guiren-box>summary{min-height:44px}}
 @media (min-width:900px) and (hover:hover) and (pointer:fine){:root{--appw:560px}.notes-fab{width:auto;height:auto;padding:9px 16px;border-radius:22px}.notes-fab .fab-tx{display:inline}.notes-expand{display:none}.tabbar button:hover,.btn:hover{filter:brightness(1.04)}.symbol-item:hover{background:rgba(183,156,120,.07)}}
 @media (min-width:1400px) and (hover:hover) and (pointer:fine){.notes-drawer{left:calc(50% + var(--appw)/2 + 12px);transform:none;width:400px;top:0;bottom:0;height:auto;border-radius:0;border-top:0;border-left:2px solid #b79c78;box-shadow:-4px 0 18px rgba(60,45,25,.18)}.notes-drawer.expanded{height:auto}.notes-fab{right:max(14px,calc(50% - var(--appw)/2 - 120px))}.notes-body textarea#saveAnalysis{min-height:60vh}}
+.ref-box{margin-top:14px;border-top:1px solid rgba(0,0,0,.12);padding-top:8px}.ref-box>summary{cursor:pointer;list-style:none;font-weight:600;letter-spacing:.08em;display:flex;gap:8px}.ref-box>summary::-webkit-details-marker{display:none}.ref-box>summary::before{content:"▸";color:#958d80}.ref-box[open]>summary::before{content:"▾"}.ref-scroll{overflow-x:auto;margin-top:8px}.ref-t{border-collapse:collapse;font-size:14px;white-space:nowrap}.ref-t th,.ref-t td{border:1px solid rgba(0,0,0,.12);padding:5px 7px;text-align:center}.ref-t th{font-weight:500;color:#6f675c;font-size:12px}.ref-t .xun{font-weight:700}.ref-t td.left{text-align:left;white-space:normal;line-height:1.9}
 </style>
 </head>
 <body>
 <div id="app">
 <header class="nav"><h1>子平八字</h1><p>命 理 冊 頁</p></header>
-<div class="seg"><button class="active" data-page="forward">出生 → 八字</button><button data-page="reverse">八字 → 出生</button><button data-page="saved">資料庫</button><button data-page="jiamu">古籍參考</button></div>
+<div class="seg"><button class="active" data-page="forward">出生 → 八字</button><button data-page="reverse">八字 → 出生</button><button data-page="saved">資料庫</button><button data-page="jiamu">參考資料</button></div>
 <main class="page active" id="forward">
 <div class="kicker">命主資料</div>
 <div class="form-sheet record-form"><div class="row"><label>命主 <span style="color:#9a4338">*</span></label><div class="control"><input id="saveNote" type="text" placeholder="命主姓名"></div></div></div>
@@ -93,13 +94,13 @@ body.on-forward .notes-fab{display:flex}body.notes-open .notes-fab{display:none}
 </main>
 
 <main class="page" id="jiamu">
-<div class="kicker">古籍參考</div>
-<div class="hint">to be completed</div>
+<div class="kicker">參考資料</div>
+<div id="refTables"></div>
 </main>
 
 <button type="button" class="notes-fab" id="notesFab" aria-label="分析筆記"><span class="fab-ic">✎</span><span class="fab-tx">分析筆記</span></button>
 <div class="notes-drawer" id="notesDrawer" role="dialog" aria-label="分析筆記"><div class="notes-head"><b>分析筆記</b><span id="notesLen" style="font-size:11px;color:var(--muted)"></span><button type="button" class="notes-expand" id="notesExpand">展開</button><button type="button" id="notesClose">收起 ×</button></div><div class="notes-body" id="notesBody"></div><div class="notes-foot">與命盤頁的筆記為同一份內容；填寫後按命盤頁「儲存目前命例」。</div></div>
-<nav class="tabbar"><button class="active" data-page="forward">命盤</button><button data-page="reverse">反查</button><button data-page="saved">資料庫</button><button data-page="jiamu">古籍</button></nav>
+<nav class="tabbar"><button class="active" data-page="forward">命盤</button><button data-page="reverse">反查</button><button data-page="saved">資料庫</button><button data-page="jiamu">參考</button></nav>
 </div>
 <script>
 (()=>{
@@ -557,6 +558,16 @@ document.getElementById('nextPage').onclick=()=>{if(lastRecords.length===PAGE_SI
  const el=document.getElementById(id);
  el.addEventListener(id==='filterPattern'||id==='searchNote'?'input':'change',()=>{curPage=0;loadSavedRecords()});
 });
+function renderRefTables(){const el=document.getElementById('refTables');if(!el)return;
+const g=x=>`<span class="${stemClass(x)}">${x}</span>`,z=x=>`<span class="${branchClass(x)}">${x}</span>`;
+const CSH=['長生（驛馬）','沐浴（桃花）','冠帶','臨官／祿位','帝旺／陽刃','衰','病','死','墓／庫','絕','胎','養'];
+const CST={甲:['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌'],乙:['亥','子','丑','卯','寅','辰','巳','午','未','申','酉','戌'],丙:['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑'],丁:['寅','卯','辰','午','巳','未','申','酉','戌','亥','子','丑'],戊:['寅','卯','辰','巳/辰/戌','午/丑/未','未','申','酉','戌（土無墓庫）','亥','子','丑'],己:['寅','卯','辰','午/丑/未','巳/辰/戌','未','申','酉','戌（土無墓庫）','亥','子','丑'],庚:['巳','午','未','申','酉','戌','亥','子','丑','寅','卯','辰'],辛:['巳','午','未','酉','申','戌','亥','子','丑','寅','卯','辰'],壬:['申','酉','戌','亥','子','丑','寅','卯','辰','巳','午','未'],癸:['申','酉','戌','子','亥','丑','寅','卯','辰','巳','午','未']};
+const zz=v=>v.replace(/\s*\/\s*/g,'／').replace(/[子丑寅卯辰巳午未申酉戌亥]/g,c=>z(c));
+const cs=`<details class="ref-box"><summary>十天干十二長生表</summary><div class="ref-scroll"><table class="ref-t"><tr><th>十二長生</th>${G.map(x=>`<th>${g(x)}</th>`).join('')}</tr>${CSH.map((t,k)=>`<tr><th>${t}</th>${G.map(x=>`<td>${zz(CST[x][k])}</td>`).join('')}</tr>`).join('')}</table></div>
+<div class="hint">此表為參考資料寫法；命盤上十二長生仍按本程式原有規則計算。</div></details>`;
+const kw=`<details class="ref-box"><summary>六十甲子空亡表</summary><div class="ref-scroll"><table class="ref-t"><tr><th>旬</th><th>六十甲子</th><th>空亡</th></tr>${[0,1,2,3,4,5].map(i=>{const st=i*10,gz=GZ.slice(st,st+10);return `<tr><th class="xun">${g(gz[0][0])}${z(gz[0][1])}旬</th><td class="left">${gz.map(c=>g(c[0])+z(c[1])).join('　')}</td><td>${z(Z[(st+10)%12])}${z(Z[(st+11)%12])}</td></tr>`}).join('')}</table></div><div class="hint">以日柱（或年柱）所在之旬查空亡。</div></details>`;
+el.innerHTML=cs+kw}
+renderRefTables();
 })();
 </script>
 </body>
