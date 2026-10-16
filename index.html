@@ -566,7 +566,8 @@ const zz=v=>v.replace(/\s*\/\s*/g,'／').replace(/[子丑寅卯辰巳午未申�
 const cs=`<details class="ref-box"><summary>十天干十二長生表</summary><div class="ref-scroll"><table class="ref-t"><tr><th>十二長生</th>${G.map(x=>`<th>${g(x)}</th>`).join('')}</tr>${CSH.map((t,k)=>`<tr><th>${t}</th>${G.map(x=>`<td>${zz(CST[x][k])}</td>`).join('')}</tr>`).join('')}</table></div>
 <div class="hint">此表為參考資料寫法；命盤上十二長生仍按本程式原有規則計算。</div></details>`;
 const kw=`<details class="ref-box"><summary>六十甲子空亡表</summary><div class="ref-scroll"><table class="ref-t"><tr><th>旬</th><th>六十甲子</th><th>空亡</th></tr>${[0,1,2,3,4,5].map(i=>{const st=i*10,gz=GZ.slice(st,st+10);return `<tr><th class="xun">${g(gz[0][0])}${z(gz[0][1])}旬</th><td class="left">${gz.map(c=>g(c[0])+z(c[1])).join('　')}</td><td>${z(Z[(st+10)%12])}${z(Z[(st+11)%12])}</td></tr>`}).join('')}</table></div><div class="hint">以日柱（或年柱）所在之旬查空亡。</div></details>`;
-el.innerHTML=cs+kw}
+const GR=`<details class="ref-box"><summary>天乙貴人表</summary><div class="ref-scroll"><table class="ref-t"><tr><th>日干</th><th>天乙貴人（地支）</th></tr>${[['甲、戊、庚','丑（牛）、未（羊）'],['乙、己','子（鼠）、申（猴）'],['丙、丁','亥（豬）、酉（雞）'],['壬、癸','卯（兔）、巳（蛇）'],['辛','午（馬）、寅（虎）']].map(r=>`<tr><th>${r[0]}</th><td>${zz(r[1])}</td></tr>`).join('')}</table></div><div class="hint">口訣：甲戊庚牛羊、乙己鼠猴鄉、丙丁豬雞位、壬癸兔蛇藏、六辛逢馬虎、此是貴人方。</div></details>`;
+el.innerHTML=cs+kw+GR}
 renderRefTables();
 })();
 </script>
